@@ -23,29 +23,24 @@ class Product
     private $name;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-
-    /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=25)
      */
     private $reference;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=50)
      */
     private $dimensions;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=125)
      */
-    private $weight;
+    private $display_type;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=125)
      */
-    private $display;
+    private $display_size;
 
     public function getId(): ?int
     {
@@ -60,18 +55,6 @@ class Product
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
 
         return $this;
     }
@@ -93,33 +76,33 @@ class Product
         return $this->dimensions;
     }
 
-    public function setDimensions(?string $dimensions): self
+    public function setDimensions(string $dimensions): self
     {
         $this->dimensions = $dimensions;
 
         return $this;
     }
 
-    public function getWeight(): ?int
+    public function getDisplayType(): ?string
     {
-        return $this->weight;
+        return $this->display_type;
     }
 
-    public function setWeight(?int $weight): self
+    public function setDisplayType(string $display_type): self
     {
-        $this->weight = $weight;
+        $this->display_type = $display_type;
 
         return $this;
     }
 
-    public function getDisplay(): ?string
+    public function getDisplaySize(): ?string
     {
-        return $this->display;
+        return $this->display_size;
     }
 
-    public function setDisplay(?string $display): self
+    public function setDisplaySize(string $display_size): self
     {
-        $this->display = $display;
+        $this->display_size = $display_size;
 
         return $this;
     }
