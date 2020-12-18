@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\User;
+use App\Entity\Retailer;
 use GuzzleHttp\Client;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerInterface;
@@ -33,7 +33,7 @@ class GithubUserProvider implements UserProviderInterface
             throw new \LogicException('Did not managed to get your user info from Github.');
         }
 
-        return new User($userData['email']);
+        return new Retailer($userData['email']);
     }
 
     public function refreshUser(UserInterface $user)

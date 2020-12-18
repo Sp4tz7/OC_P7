@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\RetailerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\Entity(repositoryClass=RetailerRepository::class)
  */
-class User implements UserInterface
+class Retailer implements UserInterface
 {
     /**
      * @ORM\Id
@@ -33,10 +35,22 @@ class User implements UserInterface
      */
     private $apiToken;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Product::class)
+     */
+    private $products;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="retailer", orphanRemoval=true)
+     */
+    private $customers;
+
     public function __construct($email)
     {
         $this->email = $email;
         $this->roles = ['ROLE_USER'];
+        $this->products = new ArrayCollection();
+        $this->customers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,6 +132,60 @@ class User implements UserInterface
     public function setApiToken(?string $apiToken): self
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): self
+    {
+        if (!$this->products->contains($product)) {
+            $this->products[] = $product;
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): self
+    {
+        $this->products->removeElement($product);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Customer[]
+     */
+    public function getCustomers(): Collection
+    {
+        return $this->customers;
+    }
+
+    public function addCustomer(Customer $customer): self
+    {
+        if (!$this->customers->contains($customer)) {
+            $this->customers[] = $customer;
+            $customer->setRetailer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomer(Customer $customer): self
+    {
+        if ($this->customers->removeElement($customer)) {
+            // set the owning side to null (unless already changed)
+            if ($customer->getRetailer() === $this) {
+                $customer->setRetailer(null);
+            }
+        }
 
         return $this;
     }
