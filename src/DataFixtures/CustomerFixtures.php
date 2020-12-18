@@ -4,9 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\Customer;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class CustomerFixtures extends Fixture
+class CustomerFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -52,9 +53,17 @@ class CustomerFixtures extends Fixture
             $customer = new Customer();
             $customer->setFullname($client['fullname']);
             $customer->setEmail($client['email']);
+            $customer->setRetailer($this->getReference(RetailerFixtures::RETAILER1_REFERENCE));
             $manager->persist($customer);
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return [
+            RetailerFixtures::class,
+        ];
     }
 }

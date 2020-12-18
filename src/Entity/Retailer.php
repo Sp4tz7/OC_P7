@@ -21,6 +21,11 @@ class Retailer implements UserInterface
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $email;
@@ -45,8 +50,10 @@ class Retailer implements UserInterface
      */
     private $customers;
 
-    public function __construct($email)
+
+    public function __construct($name, $email)
     {
+        $this->name = $name;
         $this->email = $email;
         $this->roles = ['ROLE_USER'];
         $this->products = new ArrayCollection();
@@ -186,6 +193,18 @@ class Retailer implements UserInterface
                 $customer->setRetailer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
