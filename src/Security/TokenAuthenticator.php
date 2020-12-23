@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use App\Entity\Retailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +28,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function supports(Request $request)
     {
-        return $request->headers->has('X-AUTH-TOKEN');
+        return $request->headers->has('BILEMO-AUTH-TOKEN');
     }
 
     /**
@@ -38,7 +37,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getCredentials(Request $request)
     {
-        return $request->headers->get('X-AUTH-TOKEN');
+        return $request->headers->get('BILEMO-AUTH-TOKEN');
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -50,7 +49,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         }
 
         // The "username" in this case is the apiToken, see the key `property`
-        // of `your_db_provider` in `security.yaml`.
+        // of `bilemo_provider` in `security.yaml`.
         // If this returns a user, checkCredentials() is called next:
         return $userProvider->loadUserByUsername($credentials);
     }
@@ -89,8 +88,10 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $data = [
-            // you might translate this message
-            'message' => 'Authentication Required'
+            'message' => 'Authentication Required',
+            'documentation_url' => sprintf('%s/api/doc', $request->getSchemeAndHttpHost()),
+            'authentication_url' => sprintf('https://github.com/login/oauth/authorize?client_id=%s&scope=user',
+                $request->server->all()['GIT_ID']),
         ];
 
         return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);

@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FrontController!{% endblock %}
+{% block title %}Bilemo{% endblock %}
 
 {% block body %}
-        <a href="https://github.com/login/oauth/authorize?client_id={{ GIT_ID }}" type="button" class="btn btn-info btn-lg"><i class="fa fa-github"></i> S'authentifier avec Github</a>
- {% endblock %}
+    {% if access_token %}
+        <p>Votre clé d'accès: {{ access_token }}</p>
+        <p><a href="{{ path('logout', {'token': access_token }) }}">Logout</a></p>
+    {% else %}
+        <a href="https://github.com/login/oauth/authorize?client_id={{ GIT_ID }}&scope=user" type="button"
+           class="btn btn-info btn-lg"><i class="fa fa-github"></i> S'authentifier avec Github</a>
+    {% endif %}
+{% endblock %}
