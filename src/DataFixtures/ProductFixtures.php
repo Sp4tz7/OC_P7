@@ -4,9 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class ProductFixtures extends Fixture
+class ProductFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -84,6 +85,7 @@ class ProductFixtures extends Fixture
             ],
         ];
 
+        $retailer = $this->getReference(RetailerFixtures::RETAILER1_REFERENCE);
         foreach ($mobiles as $mobile) {
             $product = new Product();
             $product->setName($mobile['Name']);
@@ -92,8 +94,17 @@ class ProductFixtures extends Fixture
             $product->setDisplayType($mobile['Display_type']);
             $product->setDisplaySize($mobile['Display_size']);
             $manager->persist($product);
+            $retailer->addProduct($product);
+            $manager->persist($retailer);
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return [
+            RetailerFixtures::class,
+        ];
     }
 }
