@@ -27,6 +27,12 @@ class Customer
      */
     private $email;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Retailer::class, inversedBy="customers")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $retailer;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +58,18 @@ class Customer
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getRetailer(): ?Retailer
+    {
+        return $this->retailer;
+    }
+
+    public function setRetailer(?Retailer $retailer): self
+    {
+        $this->retailer = $retailer;
 
         return $this;
     }
