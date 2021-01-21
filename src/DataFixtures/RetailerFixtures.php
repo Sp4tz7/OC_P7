@@ -13,7 +13,7 @@ class RetailerFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $retailer = new Retailer('MLAB', 'example@example.com');
+        $retailer = new Retailer('Swisscom SARL', 'swisscom', 'example@example.com', '');
         $retailer->setRoles(['ROLE_USER']);
 
         $manager->persist($retailer);

@@ -21,7 +21,7 @@ class ProductController extends AbstractController
      */
     public function getProductList(ProductRepository $productRepository)
     {
-        return $productRepository->findAll();
+            return $productRepository->findAll();
 
     }
 

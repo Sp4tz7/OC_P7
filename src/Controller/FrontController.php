@@ -22,18 +22,17 @@ class FrontController extends AbstractController
     }
 
     /**
-     * @Route("/logout/{token}", name="logout")
+     * @Route("/logout", name="logout")
      */
-    public function logout(Request $request, RetailerRepository $retailerRepository, $token): Response
+    public function logout(): Response
     {
-        if ($retailer = $retailerRepository->findOneBy(['apiToken' => $token])) {
-            $retailer->setApiToken(null);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($retailer);
-            $em->flush();
-        }
+        $retailer = $this->getUser();
+        $retailer->setApiToken(null);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($retailer);
+        $em->flush();
 
-       return $this->redirectToRoute('home');
+        return $this->redirectToRoute('home');
     }
 
     /**

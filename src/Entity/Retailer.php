@@ -6,10 +6,11 @@ use App\Repository\RetailerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass=RetailerRepository::class)
+ * @ORM\Entity(repositoryClass=RetailerRepository::class) *
  */
 class Retailer implements UserInterface
 {
@@ -17,16 +18,19 @@ class Retailer implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @JMS\Groups({"list", "detail"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"list", "detail"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=180, nullable=true)
+     * @JMS\Groups({"list", "detail"})
      */
     private $email;
 
@@ -42,16 +46,19 @@ class Retailer implements UserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity=Product::class)
+     * @JMS\Groups({"detail"})
      */
     private $products;
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="retailer", orphanRemoval=true)
+     * @JMS\Groups({"detail"})
      */
     private $customers;
 
     /**
      * @ORM\Column(type="string", length=55, unique=true)
+     * @JMS\Groups({"detail"})
      */
     private $username;
 
