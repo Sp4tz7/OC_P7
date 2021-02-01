@@ -1,15 +1,21 @@
 #Read the documentation: https://symfony.com/doc/master/bundles/FOSRestBundle/index.html
 fos_rest:
-    view:
-        formats: { json: true, xml: false, rss: false }
-        view_response_listener: true
     body_converter:
         enabled: true
         validate: true
         validation_errors_argument: violations
+    view:
+        formats: { json: true, xml: false, rss: false }
+        view_response_listener: true
+        mime_types:
+            json: ['application/json', 'application/json;version=1.0', 'application/json;version=2.0']
     serializer:
         serialize_null: true
     format_listener:
         rules:
-            - { path: ^/api, fallback_format: json, priorities: [ 'json' ] }
-            - { path: '^/', priorities: [ 'html', '*/*' ], fallback_format: ~, prefer_extension: true }
+            - { path: '^/', priorities: ['json'], fallback_format: 'json' }
+    param_fetcher_listener: true
+    exception:
+        enabled: true
+        codes:
+          { App\Exception\ApiValidationException: 400, App\Exception\ApiForbiddenException: 403, \Exception: 404 }

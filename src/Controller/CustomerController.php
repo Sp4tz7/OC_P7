@@ -3,13 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
-use App\Exception\ApiException;
+use App\Exception\ApiForbiddenException;
+use App\Exception\ApiValidationException;
 use App\Repository\CustomerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CustomerController extends AbstractController
 {
@@ -47,11 +49,7 @@ class CustomerController extends AbstractController
             return $customer;
         }
 
-        $exception = new ApiException(403);
-        $exception->setError('Forbidden');
-        $exception->setErrorDescription('You are not authorized to access this page. You can only access your own customer.');
-
-        return $exception->getException();
+        throw new ApiForbiddenException('You are not authorized to access this page. You can only access your own customer', 403);
     }
 
     /**
@@ -72,10 +70,6 @@ class CustomerController extends AbstractController
             return ['removed' => true];
         }
 
-        $exception = new ApiException(403);
-        $exception->setError('Forbidden');
-        $exception->setErrorDescription('You are not authorized to access this page. You can only access your own customer.');
-
-        return $exception->getException();
+        throw new ApiForbiddenException('You are not authorized to access this page. You can only delete your own customer.', 403);
     }
 }

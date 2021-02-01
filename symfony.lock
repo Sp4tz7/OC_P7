@@ -1,4 +1,7 @@
 {
+    "babdev/pagerfanta-bundle": {
+        "version": "v2.8.0"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.1"
     },
@@ -93,6 +96,9 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
+    },
     "friendsofsymfony/rest-bundle": {
         "version": "2.2",
         "recipe": {
@@ -125,11 +131,23 @@
             "./config/packages/prod/jms_serializer.yaml"
         ]
     },
+    "laminas/laminas-code": {
+        "version": "3.4.1"
+    },
+    "laminas/laminas-eventmanager": {
+        "version": "3.3.0"
+    },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.1.1"
+    },
     "nikic/php-parser": {
         "version": "v4.10.3"
     },
-    "ocramius/proxy-manager": {
-        "version": "2.2.3"
+    "pagerfanta/pagerfanta": {
+        "version": "v2.5.1"
+    },
+    "phpstan/phpdoc-parser": {
+        "version": "0.4.10"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -415,11 +433,5 @@
     },
     "willdurand/negotiation": {
         "version": "v2.3.1"
-    },
-    "zendframework/zend-code": {
-        "version": "3.4.1"
-    },
-    "zendframework/zend-eventmanager": {
-        "version": "3.2.1"
     }
 }
