@@ -12,10 +12,22 @@ use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 
 class CustomerController extends AbstractController
 {
     /**
+     * @SWG\Tag(name="Customers")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns all customers",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Customer::class))
+     *     )
+     * )
      * @Get(
      *     path = "api/customers",
      *     name = "app_customers_list"
@@ -34,6 +46,15 @@ class CustomerController extends AbstractController
     }
 
     /**
+     * @SWG\Tag(name="Customers")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns details of a given customer id",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Customer::class))
+     *     )
+     * )
      * @Get(
      *     path = "api/customers/{id}",
      *     name = "app_customer_show",
@@ -53,6 +74,15 @@ class CustomerController extends AbstractController
     }
 
     /**
+     * @SWG\Tag(name="Customers")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Delete a customer",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Customer::class))
+     *     )
+     * )
      * @Delete(
      *     path = "api/customers/{id}",
      *     name = "app_customer_delete",
