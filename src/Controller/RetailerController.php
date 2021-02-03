@@ -22,6 +22,9 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 
 
 class RetailerController extends AbstractFOSRestController
@@ -39,6 +42,15 @@ class RetailerController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Tag(name="Retailers")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns all retailers",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Retailer::class))
+     *     )
+     * )
      * @Get(
      *     path = "api/retailers",
      *     name = "app_retailers_list"
@@ -63,6 +75,15 @@ class RetailerController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Tag(name="Retailers")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns details of a given retailer id",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Retailer::class))
+     *     )
+     * )
      * @Get(
      *     path = "api/retailers/{id}",
      *     name = "app_retailer_show",
@@ -85,6 +106,15 @@ class RetailerController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Tag(name="Customers")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns all customers for a given retailer id",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Retailer::class))
+     *     )
+     * )
      * @Get(
      *     path = "api/retailers/{id}/customers",
      *     name = "app_retailer_show_customers",
@@ -109,6 +139,15 @@ class RetailerController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Tag(name="Customers")
+     * @SWG\Response(
+     *     response=201,
+     *     description="Returns details of a new retailer",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Retailer::class))
+     *     )
+     * )
      * @Post(
      *     path = "api/retailers/{id}/customer",
      *     name = "app_retailer_add_customer",
@@ -150,6 +189,15 @@ class RetailerController extends AbstractFOSRestController
     }
 
     /**
+     * @SWG\Tag(name="Products")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns products list of a given retailer id",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Retailer::class))
+     *     )
+     * )
      * @Get(
      *     path = "api/retailers/{id}/products",
      *     name = "app_retailer_show_products",

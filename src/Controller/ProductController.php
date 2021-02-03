@@ -10,11 +10,29 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
-
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use Swagger\Annotations as SWG;
 
 class ProductController extends AbstractController
 {
     /**
+     * @Security(name="Bearer")
+     * @SWG\Tag(name="Products")
+     * @SWG\Parameter(
+     *     name="order",
+     *     in="query",
+     *     type="string",
+     *     description="The field used to order products"
+     * )
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns all products",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Product::class))
+     *     )
+     * )
      * @Get(
      *     path = "api/products",
      *     name = "app_products_list"
@@ -61,6 +79,15 @@ class ProductController extends AbstractController
     }
 
     /**
+     * @SWG\Tag(name="Products")
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns details of a given product id",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@Model(type=Product::class))
+     *     )
+     * )
      * @Get(
      *     path = "api/products/{id}",
      *     name = "app_product_show",

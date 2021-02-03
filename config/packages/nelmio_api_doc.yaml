@@ -1,0 +1,17 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Bilemo
+            description: The Bilemo API Documentation
+            version: 1.0.0
+        securityDefinitions:
+            Token:
+                type: apiKey
+                description: 'GitHub OAuth at https://github.com/login/oauth/authorize?client_id={{ GIT_ID }}&scope=user'
+                name: BILEMO-AUTH-TOKEN
+                in: header
+        security:
+            - Token: []
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
