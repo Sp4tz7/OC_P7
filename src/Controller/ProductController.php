@@ -13,6 +13,7 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use Swagger\Annotations as SWG;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 class ProductController extends AbstractController
 {
@@ -65,7 +66,7 @@ class ProductController extends AbstractController
      * @View
      *     statusCode = 200,
      */
-    public function getProductList(ParamFetcherInterface $paramFetcher, ProductRepository $productRepository)
+    public function getProductList(ParamFetcherInterface $paramFetcher, ProductRepository $productRepository, AdapterInterface $cache)
     {
             $products = $productRepository->search(
                 $paramFetcher->get('keyword'),
@@ -74,7 +75,14 @@ class ProductController extends AbstractController
                 $paramFetcher->get('offset')
             );
 
-        return new Pr($products);
+            $item = $cache->getItem('products_'.md5($products->getMaxPerPage()));
+            if(!$item->isHit()){
+                $item->set( new Pr($products));
+                $cache->save($item);
+            }
+
+
+            return $item->get();
 
     }
 

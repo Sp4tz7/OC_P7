@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\Annotations\Delete;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -35,14 +36,20 @@ class CustomerController extends AbstractController
      * @View
      *     statusCode = 200,
      */
-    public function getCustomerList(CustomerRepository $customerRepository)
+    public function getCustomerList(CustomerRepository $customerRepository, AdapterInterface $cache)
     {
+        $customerList = $customerRepository->findBy(['retailer' => $this->getUser()]);
         if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())){
-            return $customerRepository->findAll();
+            $customerList = $customerRepository->findAll();
         }
 
-        return $customerRepository->findBy(['retailer' => $this->getUser()]);
+        $item = $cache->getItem('products_'.md5(serialize($customerList)));
+        if(!$item->isHit()){
+            $item->set( $customerList);
+            $cache->save($item);
+        }
 
+        return $item->get();
     }
 
     /**

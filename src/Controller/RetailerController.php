@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\View;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\Serializer\SerializationContext;
@@ -58,20 +59,27 @@ class RetailerController extends AbstractFOSRestController
      * @View
      *     statusCode = 200,
      */
-    public function getRetailerList(RetailerRepository $retailerRepository)
+    public function getRetailerList(RetailerRepository $retailerRepository, AdapterInterface $cache)
     {
         if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-            return new Response('Your are not allowed to see this page', 203);
+            return new Response('Your are not allowed to see this page', 403);
         }
 
 
         $retailers = $retailerRepository->findAll();
-        $data = $this->serializer->serialize($retailers, 'json', SerializationContext::create()->setGroups(['list']));
+        $retailerList = $this->serializer->serialize($retailers, 'json', SerializationContext::create()->setGroups(['list']));
 
-        $response = new Response($data);
+        $response = new Response($retailerList);
         $response->headers->set('Content-type', 'application/json');
 
-        return $response;
+        $item = $cache->getItem('products_'.md5($response));
+        if(!$item->isHit()){
+            $item->set( $response);
+            $cache->save($item);
+        }
+
+
+        return $item->get();
     }
 
     /**
