@@ -13,7 +13,7 @@ This project is part of the 7th course of my OpenClassRooms course
 -  CRUD users
 -  CRUD customers
 -  Documentation page
--  OAuth authentication trough github or google
+-  OAuth authentication trough github
 
 ### Requirements
 
