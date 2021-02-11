@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\RetailerRepository;
-use App\Security\GithubUserProvider;
+use App\Security\GoogleUserProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,7 +38,7 @@ class FrontController extends AbstractController
     /**
      * @Route("/auth", name="github_auth")
      */
-    public function auth(GithubUserProvider $userProvider, Request $request): Response
+    public function auth(GoogleUserProvider $userProvider, Request $request): Response
     {
         $user = $userProvider->getGithubAccessToken($request->get('code'));
 

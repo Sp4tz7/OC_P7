@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Customer;
 use App\Entity\Retailer;
 use App\Exception\ApiForbiddenException;
+use App\Exception\ApiValidationException;
 use App\Repository\RetailerRepository;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use JMS\Serializer\SerializationContext;
-use App\Exception\ApiValidationException;
+use App\Exception\ApiNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -219,7 +220,7 @@ class RetailerController extends AbstractFOSRestController
         Request $request
     ) {
         $token = $request->headers->get('BILEMO-AUTH-TOKEN');
-        if ($retailer->getApiToken() === $token) {
+        if ($retailer->getApiToken() === $token or in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             return $retailer->getProducts();
         }
 

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Customer;
 use App\Exception\ApiForbiddenException;
-use App\Exception\ApiValidationException;
+use App\Exception\ApiNotFoundException;
 use App\Repository\CustomerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -96,7 +96,7 @@ class CustomerController extends AbstractController
      *     requirements = {"id"="\d+"}
      * )
      * @View
-     *     statusCode = 200,
+     *     statusCode = 204,
      */
     public function deleteCustomer(Customer $customer)
     {
@@ -104,9 +104,9 @@ class CustomerController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->remove($customer);
             $em->flush();
-            return ['removed' => true];
+            return ;
         }
 
-        throw new ApiForbiddenException('You are not authorized to access this page. You can only delete your own customer.', 403);
+        throw new ApiForbiddenException('You are not authorized !!! to access this page. You can only delete your own customer.', 403);
     }
 }
