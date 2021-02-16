@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Customer;
+use App\Representation\Customers as Cu;
 use App\Exception\ApiForbiddenException;
 use App\Exception\ApiNotFoundException;
 use App\Repository\CustomerRepository;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Delete;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,19 +36,55 @@ class CustomerController extends AbstractController
      *     path = "api/customers",
      *     name = "app_customers_list"
      * )
+     * @param ParamFetcherInterface $paramFetcher
+     * @QueryParam(
+     *     name="keyword",
+     *     requirements="[a-zA-Z0-9]+",
+     *     nullable=true,
+     *     description="The keyword to search for."
+     * )
+     * @QueryParam(
+     *     name="order",
+     *     requirements="asc|desc",
+     *     default="asc",
+     *     description="Sort order (asc or desc)"
+     * )
+     * @QueryParam(
+     *     name="limit",
+     *     requirements="\d+",
+     *     default="15",
+     *     description="Max number of customers per page."
+     * )
+     * @QueryParam(
+     *     name="offset",
+     *     requirements="\d+",
+     *     default="1",
+     *     description="The pagination offset"
+     * )
      * @View
      *     statusCode = 200,
      */
-    public function getCustomerList(CustomerRepository $customerRepository, AdapterInterface $cache)
+    public function getCustomerList(ParamFetcherInterface $paramFetcher, CustomerRepository $customerRepository, AdapterInterface $cache)
     {
-        $customerList = $customerRepository->findBy(['retailer' => $this->getUser()]);
+
+        $retailer = null;
         if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())){
-            $customerList = $customerRepository->findAll();
+            $retailer = $this->getUser()->getId();
         }
 
-        $item = $cache->getItem('products_'.md5(serialize($customerList)));
+        $customers = $customerRepository->search(
+            $paramFetcher->get('keyword'),
+            $paramFetcher->get('order'),
+            $paramFetcher->get('limit'),
+            $paramFetcher->get('offset'),
+            $retailer
+        );
+
+        $data = new Cu($customers);
+
+        $item = $cache->getItem('products_'.md5(json_encode($data->meta)));
         if(!$item->isHit()){
-            $item->set( $customerList);
+            $item->set($data);
             $cache->save($item);
         }
 
@@ -69,10 +108,11 @@ class CustomerController extends AbstractController
      * )
      * @View
      *     statusCode = 200,
+     * @throws ApiForbiddenException
      */
-    public function getCustomer(Customer $customer)
+    public function getCustomer(Customer $customer): Customer
     {
-        if ($customer->getRetailer() == $this->getUser()){
+        if ($customer->getRetailer() == $this->getUser() or in_array('ROLE_ADMIN', $this->getUser()->getRoles()) ){
 
             return $customer;
         }
@@ -100,7 +140,7 @@ class CustomerController extends AbstractController
      */
     public function deleteCustomer(Customer $customer)
     {
-        if ($customer->getRetailer() == $this->getUser()){
+        if ($customer->getRetailer() == $this->getUser() or in_array('ROLE_ADMIN', $this->getUser()->getRoles())){
             $em = $this->getDoctrine()->getManager();
             $em->remove($customer);
             $em->flush();

@@ -41,7 +41,7 @@ class ProductController extends AbstractController
      * @param ParamFetcherInterface $paramFetcher
      * @QueryParam(
      *     name="keyword",
-     *     requirements="[a-zA-Z0-9]",
+     *     requirements="[a-zA-Z0-9]+",
      *     nullable=true,
      *     description="The keyword to search for."
      * )
@@ -55,7 +55,7 @@ class ProductController extends AbstractController
      *     name="limit",
      *     requirements="\d+",
      *     default="15",
-     *     description="Max number of movies per page."
+     *     description="Max number of products per page."
      * )
      * @QueryParam(
      *     name="offset",
@@ -75,9 +75,11 @@ class ProductController extends AbstractController
                 $paramFetcher->get('offset')
             );
 
-            $item = $cache->getItem('products_'.md5($products->getMaxPerPage()));
+            $data = new Pr($products);
+
+            $item = $cache->getItem('products_'.md5(json_encode($data->meta)));
             if(!$item->isHit()){
-                $item->set( new Pr($products));
+                $item->set( $data);
                 $cache->save($item);
             }
 

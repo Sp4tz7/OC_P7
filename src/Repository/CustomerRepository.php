@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Customer;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\AbstractRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,39 +12,28 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Customer[]    findAll()
  * @method Customer[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CustomerRepository extends ServiceEntityRepository
+class CustomerRepository extends AbstractRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Customer::class);
     }
 
-    // /**
-    //  * @return Customer[] Returns an array of Customer objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function search($term, $order = 'asc', $limit = 20, $offset = 0, $retailer)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this
+            ->createQueryBuilder('a')
+            ->select('a')
+            ->orderBy('a.fullname', $order);
 
-    /*
-    public function findOneBySomeField($value): ?Customer
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        if (null !== $term) {
+            $qb
+                ->where('a.fullname LIKE ?1')
+                ->orWhere('a.email LIKE ?2')
+                ->setParameter(1, '%'.$term.'%')
+                ->setParameter(2, '%'.$term.'%') ;
+        }
+
+        return $this->paginate($qb, $limit, $offset);
     }
-    */
 }

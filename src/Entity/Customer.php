@@ -5,9 +5,11 @@ namespace App\Entity;
 use App\Repository\CustomerRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
+ * @JMS\ExclusionPolicy("all")
  */
 class Customer
 {
@@ -15,18 +17,23 @@ class Customer
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @JMS\Expose()
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=55)
      * @Assert\NotBlank
+     * @JMS\Groups({"list"})
+     * @JMS\Expose()
      */
     private $fullname;
 
     /**
      * @ORM\Column(type="string", length=55)
      * @Assert\NotBlank
+     * @JMS\Groups({"list"})
+     * @JMS\Expose()
      */
     private $email;
 
