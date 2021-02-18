@@ -19,21 +19,21 @@ class CustomerRepository extends AbstractRepository
         parent::__construct($registry, Customer::class);
     }
 
-    public function search($term, $order = 'asc', $limit = 20, $offset = 0, $retailer)
+    public function search($term, $order = 'asc', $limit = 20, $offset = 0)
     {
-        $qb = $this
+        $query = $this
             ->createQueryBuilder('a')
             ->select('a')
             ->orderBy('a.fullname', $order);
 
         if (null !== $term) {
-            $qb
+            $query
                 ->where('a.fullname LIKE ?1')
                 ->orWhere('a.email LIKE ?2')
                 ->setParameter(1, '%'.$term.'%')
                 ->setParameter(2, '%'.$term.'%') ;
         }
 
-        return $this->paginate($qb, $limit, $offset);
+        return $this->paginate($query, $limit, $offset);
     }
 }
