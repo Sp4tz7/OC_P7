@@ -32,6 +32,9 @@ class Customer
     /**
      * @ORM\Column(type="string", length=55)
      * @Assert\NotBlank
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email."
+     * )
      * @JMS\Groups({"list"})
      * @JMS\Expose()
      */
