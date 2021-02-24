@@ -14,30 +14,31 @@ class ExceptionListener
         $throwable = $event->getThrowable();
         $type = get_class($throwable);
 
+        switch ($type) {
+            case 'Symfony\Component\Routing\Exception\ResourceNotFoundException':
+                $statusCode = Response::HTTP_NOT_FOUND;
+                break;
+
+            case 'Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException':
+                $statusCode = Response::HTTP_NOT_IMPLEMENTED;
+                break;
+
+            case 'App\Exception\ApiForbiddenException':
+                $statusCode = Response::HTTP_FORBIDDEN;
+                break;
+
+            case 'App\Exception\ApiValidationException':
+                $statusCode = Response::HTTP_BAD_REQUEST;
+                break;
+
+            default:
+                $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+                break;
+
+        }
+
         if (method_exists($throwable, 'getStatusCode')) {
             $statusCode = $throwable->getStatusCode();
-        } else {
-            switch ($type) {
-                case 'Symfony\Component\Routing\Exception\ResourceNotFoundException':
-                    $statusCode = Response::HTTP_NOT_FOUND;
-                    break;
-
-                case 'Symfony\Component\HttpKernel\Exception\UnsupportedMediaTypeHttpException':
-                    $statusCode = Response::HTTP_NOT_IMPLEMENTED;
-                    break;
-
-                case 'App\Exception\ApiForbiddenException':
-                    $statusCode = Response::HTTP_FORBIDDEN;
-                    break;
-
-                case 'App\Exception\ApiValidationException':
-                    $statusCode = Response::HTTP_BAD_REQUEST;
-                    break;
-
-                default:
-                    $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
-                    break;
-            }
         }
 
         $error = [];

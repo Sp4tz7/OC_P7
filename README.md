@@ -3,23 +3,24 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b2705c36e91347bc97d6c44bdba27bfa)](https://www.codacy.com/gh/Sp4tz7/OC_P7/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Sp4tz7/OC_P7&amp;utm_campaign=Badge_Grade)
 
 This project is part of the 7th course of my OpenClassRooms course
--  Use the Symfony framework
--  Implement an API
--  Reach the 3th level of Richardson's model
+
+- Use the Symfony framework
+- Implement an API
+- Reach the 3th level of Richardson's model
 
 ## Features
 
--  CRUD products
--  CRUD users
--  CRUD customers
--  Documentation page
--  OAuth authentication trough github
+- CRUD products
+- CRUD users
+- CRUD customers
+- Documentation page
+- OAuth authentication trough github
 
 ### Requirements
 
 In order to use this API, the following points must be respected
 
--  PHP version >=7.2.5
+- PHP version >=7.2.5
 
 ### Installation
 
@@ -28,6 +29,7 @@ This _API_ project requires [PHP](https://php.net/) 7.2.5+ and [Composer](https:
 Install the whole project from Github and run Composer vendors dependencies.
 
 #### File
+
 ```sh
 git clone https://github.com/Sp4tz7/OC_P7.git
 cd OC_P7
@@ -36,9 +38,13 @@ composer install
 
 ### Configuration
 
-Before running this framework, you have to setup the database data.
-1.  Copy the .env file to a .env.local file and edit the DB requested data.
-2.  Point your virtual host to the **Public** directory.
+Before running this framework, you have to setup some configurations.
+
+1. Create a new Github OAuth app trough the [Github developers settings](https://github.com/settings/developers)
+   1. Point the authorization callback URL to YOUR-DOMAIN/auth
+   2. Copy your Client ID and Client Secrets to your .env file
+2. Copy the .env file to a .env.local file and edit the DB requested data.
+3. Point your virtual host to the **Public** directory.
 
 #### Install database
 
