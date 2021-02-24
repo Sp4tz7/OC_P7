@@ -28,9 +28,9 @@ class FrontController extends AbstractController
     {
         $retailer = $this->getUser();
         $retailer->setApiToken(null);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($retailer);
-        $em->flush();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($retailer);
+        $entityManager->flush();
 
         return $this->redirectToRoute('home');
     }

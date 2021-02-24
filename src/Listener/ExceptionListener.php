@@ -43,7 +43,7 @@ class ExceptionListener
         $error = [];
 
         $message = $throwable->getMessage();
-        if (gettype($message) == 'string') {
+        if (is_string($message)) {
             $error['detail'] = $message;
         } else {
             $error = $message;

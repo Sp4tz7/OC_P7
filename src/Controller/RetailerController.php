@@ -101,7 +101,7 @@ class RetailerController extends AbstractFOSRestController
      * @View
      *     statusCode = 200,
      */
-    public function getRetailerDetail(Retailer $retailer, Request $request)
+    public function getRetailerDetail(Retailer $retailer)
     {
         if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             return $retailer;
@@ -179,9 +179,9 @@ class RetailerController extends AbstractFOSRestController
 
         if ($retailer === $this->getUser() or in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
             $customer->setRetailer($retailer);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($customer);
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($customer);
+            $entityManager->flush();
 
             return $this->view($customer, Response::HTTP_CREATED, [
                 'Location' => $this->generateUrl('app_retailer_show_customers', ['id' => $customer->getId()],

@@ -141,9 +141,9 @@ class CustomerController extends AbstractController
     public function deleteCustomer(Customer $customer)
     {
         if ($customer->getRetailer() == $this->getUser() or in_array('ROLE_ADMIN', $this->getUser()->getRoles())){
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($customer);
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($customer);
+            $entityManager->flush();
             return ;
         }
 
