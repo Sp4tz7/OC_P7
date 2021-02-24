@@ -68,8 +68,8 @@ class CustomerController extends AbstractController
     {
 
         $retailer = null;
-        if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())){
-            $retailer = $this->getUser()->getId();
+        if (!in_array('ROLE_ADMIN', $this->getUser()->getRoles())){
+            $retailer = $this->getUser();
         }
 
         $customers = $customerRepository->search(
