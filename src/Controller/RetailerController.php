@@ -219,8 +219,9 @@ class RetailerController extends AbstractFOSRestController
         Retailer $retailer,
         Request $request
     ) {
-        $token = $request->headers->get('BILEMO-AUTH-TOKEN');
-        if ($retailer->getApiToken() === $token or in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+
+        if ($retailer === $this->getUser() or in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+
             return $retailer->getProducts();
         }
 
