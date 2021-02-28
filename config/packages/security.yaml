@@ -1,0 +1,31 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        bilemo_provider:
+            entity:
+                class: App\Entity\Retailer
+                property: apiToken
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+            lazy: true
+            provider: bilemo_provider
+            guard:
+                authenticators:
+                    - App\Security\TokenAuthenticator
+            stateless: true
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+    access_control:
+        - { path: ^/api/retailers, roles: ROLE_USER }
+        - { path: ^/api/products, roles: ROLE_USER }
+        - { path: ^/api/customers, roles: ROLE_USER }
