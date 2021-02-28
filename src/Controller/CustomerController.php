@@ -123,7 +123,7 @@ class CustomerController extends AbstractController
     /**
      * @SWG\Tag(name="Customers")
      * @SWG\Response(
-     *     response=200,
+     *     response=204,
      *     description="Delete a customer",
      *     @SWG\Schema(
      *         type="array",
