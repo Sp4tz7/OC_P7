@@ -8,9 +8,19 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * @ORM\Entity(repositoryClass=RetailerRepository::class) *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route(
+ *          "app_retailer_show",
+ *          parameters = { "id" = "expr(object.getId())" },
+ *          absolute = true
+ *      )
+ * )
+ * @JMS\ExclusionPolicy("all")
  */
 class Retailer implements UserInterface
 {
@@ -19,18 +29,21 @@ class Retailer implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @JMS\Groups({"list", "detail"})
+     * @JMS\Expose()
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @JMS\Groups({"list", "detail"})
+     * @JMS\Expose()
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=180, nullable=true)
      * @JMS\Groups({"list", "detail"})
+     * @JMS\Expose()
      */
     private $email;
 
